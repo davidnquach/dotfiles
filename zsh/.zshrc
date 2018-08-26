@@ -4,7 +4,7 @@
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-export ZSH=/Users/dquach/.oh-my-zsh
+export ZSH=$HOME/.oh-my-zsh
 
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
@@ -151,7 +151,9 @@ alias gstl='g stash list'
 alias gstp='g stash pop'
 alias gsu='g submodule update'
 alias guc='g update-index --assume-unchanged'
-alias gup='g !f() { git pull && git submodule update; }; f'
+
+function gup () git pull && git submodule update 
+
 
 # Vim
 alias vim='nvim'
@@ -183,4 +185,4 @@ if [ -f '/Users/dquach/Downloads/google-cloud-sdk/path.zsh.inc' ]; then source '
 if [ -f '/Users/dquach/Downloads/google-cloud-sdk/completion.zsh.inc' ]; then source '/Users/dquach/Downloads/google-cloud-sdk/completion.zsh.inc'; fi
 
 # rbenv
-eval "$(rbenv init -)"
+# eval "$(rbenv init -)"
