@@ -4,12 +4,39 @@
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-export ZSH=$HOME/.oh-my-zsh
+export ZSH=/Users/dquach/.oh-my-zsh
 
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
-ZSH_THEME="sunrise"
+ZSH_THEME="spaceship"
+
+SPACESHIP_PROMPT_ORDER=(
+  time          # Time stamps section
+  user          # Username section
+  dir           # Current directory section
+  host          # Hostname section
+  git           # Git section (git_branch + git_status)
+  package       # Package version
+  node          # Node.js section
+  ruby          # Ruby section
+  elixir        # Elixir section
+  xcode         # Xcode section
+  swift         # Swift section
+  golang        # Go section
+  venv          # virtualenv section
+  pyenv         # Pyenv section
+  kubecontext   # Kubectl context section
+  exec_time     # Execution time
+  line_sep      # Line break
+  battery       # Battery level and status
+  vi_mode       # Vi-mode indicator
+  jobs          # Background jobs indicator
+  exit_code     # Exit code section
+  char          # Prompt character
+)
+export SPACESHIP_USER_SHOW=always
+export SPACESHIP_KUBECONTEXT_SHOW=false
 
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
@@ -53,7 +80,7 @@ ZSH_THEME="sunrise"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(ruby rails tmux rake)
+plugins=(ruby tmux rake)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -77,6 +104,18 @@ source $ZSH/oh-my-zsh.sh
 # ssh
 # export SSH_KEY_PATH="~/.ssh/dsa_id"
 
+setopt hist_ignore_all_dups
+setopt hist_reduce_blanks
+setopt inc_append_history
+setopt share_history
+setopt auto_cd
+setopt auto_list
+setopt auto_menu
+setopt always_to_end
+zstyle ':completion:*' menu select
+zstyle ':completion:*' group-name ''
+zstyle ':completion:::::' completer _expand _complete _ignored _approximate
+
 # Set personal aliases, overriding those provided by oh-my-zsh libs,
 # plugins, and themes. Aliases can be placed here, though oh-my-zsh
 # users are encouraged to define aliases within the ZSH_CUSTOM folder.
@@ -95,17 +134,27 @@ alias rtm='RAILS_ENV=test rake db:migrate'
 alias rts='RAILS_ENV=test bundle exec rails s'
 alias rut='RAILS_ENV=test bundle exec ruby -Itest'
 
+# Rspec
+alias rs='RAILS_ENV=test bundle exec rspec'
+
 # Bundle
 alias bi='bundle install'
 alias bl='bundle list'
 alias bu='bundle update'
 alias bus='bu --source'
 
+# Elixir
+alias e='elixir'
+
 # Rake
 alias rap='rake assets:precompile'
 alias rat='RAILS_ENV=test bundle exec rake test'
 
 # Command line
+alias pb='cd ~/Projects/business-center'
+alias pj='cd ~/Projects/jiffy'
+alias pp='cd ~/Projects/phoenix'
+alias p2='cd ~/Projects/p2services'
 alias sz='source ~/.zshrc'
 
 # Redis
@@ -113,17 +162,27 @@ alias reds='redis-server > /dev/null 2>&1 &'
 
 # Kubernetes
 alias k='kubectl'
+alias kdesc='k describe'
 alias kdp='k delete pod'
 alias ke='k exec -it'
 alias kgc='k config get-contexts'
 alias kgp='k get pods'
+alias kgh='k get hpa'
+alias keh='k edit hpa'
 alias kl='k logs'
 alias kru='k rollout undo' # Ex. kubectl rollout undo <deployment name>. Done for each cluster
 alias ksc='k config set-context'
+alias kscale='k scale'
+alias kgpj="kgp | grep jiffy | awk 'NR==1{ print \$1 }'"
 
 # Gcloud
 alias gsp='gcloud config set project'
 alias ggc='gcloud container clusters get-credentials'
+alias gcl='gcloud container clusters list'
+alias gsd='gcloud container clusters --project vst-main-nonprod get-credentials nonprod3-use1 --zone us-east1'
+alias gsdbg='gcloud container clusters --project vst-main-nonprod get-credentials nonprodbg2-use1 --zone  us-east1'
+alias gsp='gcloud container clusters --project vst-main-prod get-credentials prod1-use1 --zone us-east1'
+alias gspbg='gcloud container clusters --project vst-main-prod get-credentials prodbg1-use1 --zone us-east1'
 
 # Git
 alias g='git'
@@ -135,13 +194,15 @@ alias gco='g checkout'
 alias gcob='g checkout -b'
 alias gcod='g checkout develop'
 alias gcom='g checkout master'
-alias gcon='g diff --name-only --diff-filter=U'
+alias gcon='g diff --name-only --diff-filter=U' # View files that have conflicts
 alias gcos='g checkout staging'
 alias gd='g diff'
 alias gl='g log'
 alias gm='g merge --no-ff'
 alias gma='g merge --abort'
+alias gprev='g prev'
 alias gpush='g push'
+alias gpo='g push -u origin'
 alias grh='g reset --hard'
 alias grs='g reset --soft'
 alias gs='g status'
@@ -151,15 +212,90 @@ alias gstl='g stash list'
 alias gstp='g stash pop'
 alias gsu='g submodule update'
 alias guc='g update-index --assume-unchanged'
+function gup () git pull && git submodule update
 
-function gup () git pull && git submodule update 
-
+# mix
+alias mdg='mix deps.get'
+alias mdc='mix deps.clean --all --unlock'
 
 # Vim
 alias vim='nvim'
+alias vt='vim ~/.tmux.conf'
+alias vz='vim ~/.zshrc'
+alias vv='vim ~/.vimrc'
+alias vn='vim ~/.config/nvim/init.vim'
+
+# direnv allows setting environment variables per directory
+alias da='direnv allow'
+
+### FUNCTIONS ###
+# fzf
+vf() { 
+  local file
+  file=$(fzf --preview="bat --theme=OneHalfDark --color=always {}" --bind "alt-j:preview-down,alt-k:preview-up,alt-J:preview-page-down,alt-K:preview-page-up")
+
+  if [[ -n ${file} ]]; then
+    vim ${file}
+  else
+    return
+  fi
+}
+
+vc() {
+  local file
+  local conflicts
+
+  conflicts=$(gcon)
+  if [[ -z ${conflicts} ]]; then
+    echo "no conflicts"
+    return 0
+  fi
+
+  file=$(echo "$conflicts" | fzf)
+
+  if [[ -n ${file} ]]; then
+    vim ${file}
+  else
+    echo "file not found"
+    return 1
+  fi
+}
+
+pf() {
+  local dir
+  dir=$(find ~/Projects/* -maxdepth 0 -type d -print | awk -F "/" '{ print $5 }' | fzf)
+
+  if [[ ! -z "$dir" ]]; then
+    cd "$HOME/Projects/$dir"
+  fi
+}
+
+kpf() {
+  if [[ $# -eq 0 ]]; then
+    echo 'No arguments given'
+    return 1
+  fi
+
+  kgp | grep $1 | fzf | awk 'BEGIN{ORS=""} /jiffy/{ print $1 }' | pbcopy
+}
+
+kpe() {
+  if [[ $# -eq 0 ]]; then
+    echo 'No arguments given'
+    return 1
+  fi
+
+  local pod
+  pod=$(kgp | grep $1 | fzf | awk 'BEGIN{ORS=""} /jiffy/{ print $1 }')
+
+  if [[ ! -z "$pod" ]]; then
+    ke $pod bash
+  fi
+}
+### END ###
 
 # Adds zsh syntax highlighting to the command line
-# source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 # Environment Variable for tmuxinator
 export EDITOR='nvim'
@@ -176,8 +312,6 @@ if [[ $TERM = dumb ]]; then
   unset zle_bracketed_paste
 fi
 
-stty erase '^?'
-
 # The next line updates PATH for the Google Cloud SDK.
 if [ -f '/Users/dquach/Downloads/google-cloud-sdk/path.zsh.inc' ]; then source '/Users/dquach/Downloads/google-cloud-sdk/path.zsh.inc'; fi
 
@@ -186,3 +320,40 @@ if [ -f '/Users/dquach/Downloads/google-cloud-sdk/completion.zsh.inc' ]; then so
 
 # rbenv
 # eval "$(rbenv init -)"
+
+### ENVIRONMENT VARIABLES ###
+# go
+export GOBIN=$GOPATH/bin
+
+# nvm
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+export PATH="/usr/local/opt/mysql@5.7/bin:$PATH"
+export PATH="$HOME/.jenv/bin:$PATH"
+export PATH="$HOME/Projects/apache-maven-3.6.0/bin:$PATH"
+
+eval "$(jenv init -)"
+
+# direnv
+eval "$(direnv hook zsh)"
+
+export PATH="/usr/local/sbin:$PATH"
+export PATH="/Users/dquach/.bin:$PATH"
+
+. $HOME/.asdf/asdf.sh
+. $HOME/.asdf/completions/asdf.bash
+. $HOME/.zsh/minikube_completions
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+export FZF_DEFAULT_OPTS='
+  --height 40% 
+  --layout=reverse 
+  --border
+  --color fg:242,bg:236,hl:65,fg+:15,bg+:239,hl+:108
+  --color info:108,prompt:109,spinner:108,pointer:168,marker:168
+'
+
+# zsh autosuggestions
+source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=244"
