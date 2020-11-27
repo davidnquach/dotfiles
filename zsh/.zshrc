@@ -153,16 +153,17 @@ alias kru='k rollout undo' # Ex. kubectl rollout undo <deployment name>. Done fo
 alias ksc='k config set-context'
 alias kscale='k scale'
 alias kgpj="kgp | grep jiffy | awk 'NR==1{ print \$1 }'"
+alias krsftp="kubectl rollout restart -n verba-sftp deployment/verba-sftp-nonprod-sftp"
 
 # Gcloud
 alias gsp='gcloud config set project'
 alias ggc='gcloud container clusters get-credentials'
 alias gcl='gcloud container clusters list'
 alias gsd='gcloud container clusters --project vst-main-nonprod get-credentials nonprod3-use1 --zone us-east1'
-alias gsdv='gcloud container clusters --project vst-verba-nonprod get-credentials vst-verba-nonprod2 --zone us-east1-b'
 alias gsp='gcloud container clusters --project vst-main-prod get-credentials prod1-use1 --zone us-east1'
 alias gspbg='gcloud container clusters --project vst-main-prod get-credentials prodbg1-use1 --zone us-east1'
 alias gpe='gcloud beta emulators pubsub start --project=slurpee --host-port=localhost:8085'
+alias vnp='gcloud container clusters --project vst-verba-nonprod get-credentials vst-verba-nonprod2 --zone us-east1-b'
 
 # Git
 alias g='git'
@@ -197,6 +198,10 @@ function gup () git pull && git submodule update
 # mix
 alias mdg='mix deps.get'
 alias mdc='mix deps.clean --all --unlock'
+
+# vim
+alias tasks='vim ~/Projects/Notes/tasks.md'
+alias notes='vim ~/Projects/Notes/verba.md'
 
 # tmux
 alias tt='tmuxinator'
@@ -403,7 +408,6 @@ export LDFLAGS="-L/usr/local/opt/openssl/lib"
 export CPPFLAGS="-I/usr/local/opt/openssl/include"
 export PKG_CONFIG_PATH="/usr/local/opt/openssl/lib/pkgconfig"
 
-export PATH=$VB_INFRA_REPO/bin:$PATH
 export DYLD_LIBRARY_PATH="/usr/local/Cellar/imagemagick/7.0.10-6_1/lib/"
 
 # The next line updates PATH for the Google Cloud SDK.

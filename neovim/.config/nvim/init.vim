@@ -2,6 +2,9 @@ set runtimepath^=~/.vim runtimepath+=~/.vim/after
 let &packpath = &runtimepath
 
 call plug#begin()
+Plug 'leafgarland/typescript-vim'
+Plug 'peitalin/vim-jsx-typescript'
+Plug 'liuchengxu/vim-which-key'
 Plug 'ryanoasis/vim-devicons'
 Plug 'elixir-lang/vim-elixir'
 Plug 'dhruvasagar/vim-table-mode'
@@ -32,6 +35,8 @@ Plug 'neomake/neomake'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'preservim/nerdtree'
 Plug 'easymotion/vim-easymotion'
+Plug 'SidOfc/mkdx'
+Plug 'masukomi/vim-markdown-folding'
 call plug#end()
 
 set clipboard+=unnamedplus

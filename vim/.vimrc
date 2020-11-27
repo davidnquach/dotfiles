@@ -1,20 +1,25 @@
 "---------------------
 "      SETTINGS      |
 "---------------------
-let mapleader = " "
+let g:mapleader = "\<Space>"
+let g:maplocalleader = ','
 let g:auto_save = 1
 let g:auto_save_silent = 1
 let g:gruvbox_guisp_fallback = "bg"
 colo gruvbox
-filetype indent on " Syntax highlighting
-filetype plugin on " Syntax highlighting
-syntax on          " File type recognition
+" Syntax highlighting
+filetype indent on
+" Syntax highlighting
+filetype plugin on
+" File type recognition
+syntax on
 set pastetoggle=<F2>
 set autoindent
 " Auto refresh file
 set autoread
 " set background=dark
-set backspace=indent,eol,start " Fixes backspace
+" Fixes backspace
+set backspace=indent,eol,start 
 set cmdheight=2
 set colorcolumn=85
 set cursorline
@@ -28,10 +33,12 @@ set hlsearch
 set ignorecase
 set incsearch
 set laststatus=2
-set modelines=0    " Prevents security exploits
+" Prevents security exploits
+set modelines=0
 set mouse=a
 set nobackup
-set nocompatible   " Turns off compatibility with vi
+" Turns off compatibility with vi
+set nocompatible
 set nofoldenable
 set nowritebackup
 set re=1
@@ -47,6 +54,7 @@ set smartcase
 set smartindent
 set spell
 set spelllang=en
+set spellcapcheck=
 set splitbelow
 set splitright
 set tabstop=2 shiftwidth=2 expandtab
@@ -59,6 +67,7 @@ set visualbell
 set wildmenu
 set wildmode=list:longest
 set wrap
+set timeoutlen=500
 
 " Vim autoread
 au CursorHold,CursorHoldI * checktime
@@ -216,12 +225,12 @@ let g:fzf_buffers_jump = 1
 " function! FloatingFZF()
 "   let buf = nvim_create_buf(v:false, v:true)
 "   call setbufvar(buf, '&signcolumn', 'no')
- 
+
 "   let height = float2nr(10)
 "   let width = float2nr(80)
 "   let horizontal = float2nr((&columns - width) / 2)
 "   let vertical = 1
- 
+
 "   let opts = {
 "         \ 'relative': 'editor',
 "         \ 'row': vertical,
@@ -230,7 +239,7 @@ let g:fzf_buffers_jump = 1
 "         \ 'height': height,
 "         \ 'style': 'minimal'
 "         \ }
- 
+
 "   call nvim_open_win(buf, v:true, opts)
 " endfunction
 
@@ -261,6 +270,9 @@ nnoremap <leader>gd :Gdiff<cr>
 nnoremap <leader>gb :Gblame<cr>
 nnoremap <leader>gs :Gstatus<cr>
 
+"*** Vim WhichKey ***
+nnoremap <silent> <leader> :<c-u>WhichKey '<Space>'<CR>
+nnoremap <silent> <localleader> :<c-u>WhichKey ','<CR>
 "*** Org Mode ***
 let g:org_agenda_files=['~/org/index.org']
 
@@ -289,8 +301,8 @@ let g:ale_fixers = {
 let g:ale_sign_error = '✘'
 let g:ale_sign_warning = '⚠'
 let g:ale_elixir_elixir_ls_release='/Users/dquach/Projects/elixir-ls/release'
-let g:ycm_language_server = 
-  \ [ 
+let g:ycm_language_server =
+  \ [
   \   {
   \     'name': 'ruby',
   \     'cmdline': ['/Users/dquach/.asdf/shims/solargraph', 'stdio'],
@@ -301,6 +313,15 @@ let g:ycm_language_server =
 let g:neomake_elixir_enabled_makers = ['credo']
 
 autocmd! BufWritePost .ex[s] Neomake
+
+" mkdx setting
+let g:mkdx#settings     = { 'highlight': { 'enable': 1 },
+                        \ 'enter': { 'shift': 1 },
+                        \ 'links': { 'external': { 'enable': 1 } },
+                        \ 'toc': { 'text': 'Table of Contents', 'update_on_write': 1 },
+                        \ 'fold': { 'enable': 1 } }
 "---------------------
 "      FUNCTIONS     |
 "---------------------
+
+autocmd FileType markdown set foldexpr=NestedMarkdownFolds()
